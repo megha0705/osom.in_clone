@@ -19,12 +19,14 @@ public class SpringSecurity {
     return http.build();*/
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers( // Add all public endpoints here
-                                "/product/**"// Allow any endpoint under /public
-                        ).permitAll()
-                        .anyRequest().authenticated() // Other endpoints require authentication
+                                "/product/**", "/payment/**" , "/user/**", "/dashboard"// Allow any endpoint under /public
+                        ).permitAll()// Other endpoints require authentication
                 )
-                .oauth2Login(Customizer.withDefaults());
+                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/dashboard", false));
+                // Redirect after successful login
+
             http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
 
